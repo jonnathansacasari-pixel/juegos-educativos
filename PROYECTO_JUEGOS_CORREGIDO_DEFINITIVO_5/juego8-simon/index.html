@@ -1,0 +1,14 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Heladería</title>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="../kit.css"></head><body>
+<div class="top-nav"><a href="../index.html" class="btn-home">🏠 Menú</a><span class="title">🍦 La Heladería Mágica</span><span class="score" id="cnt">🍦 0</span></div>
+<main class="heladeria">
+ <div class="panel"><div class="fila" id="sab"></div><div class="fila" id="tops"></div><button class="servir" onclick="servir()">🎉 ¡Servir!</button></div>
+ <div class="helado" id="hel"><svg class="cono" viewBox="0 0 120 150"><polygon points="8,0 112,0 60,150" fill="#f59e0b" stroke="#b45309" stroke-width="5" stroke-linejoin="round"/><path d="M30 0L75 95M60 0L90 55M90 0L45 95M35 50L85 50M48 85L72 85" stroke="#b45309" stroke-width="3" fill="none"/></svg></div>
+ <div class="cliente" id="cli">🐻</div>
+</main>
+<script src="../kit.js"></script><script src="script.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => { if (window.decir) window.decir("¡Bienvenido a La Heladería! Prepara un helado delicioso con toppings reales."); }, 600);
+  });
+</script></body></html>

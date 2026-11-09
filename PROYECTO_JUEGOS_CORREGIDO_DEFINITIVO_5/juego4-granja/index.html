@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Granja - Educación Inicial</title>
+  <link rel="stylesheet" href="../global.css">
+  <link rel="stylesheet" href="../kit.css">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="../index.html" class="btn-home">🏠 Menú</a>
+    <h2 class="title">🐮 La Granja Interactiva</h2>
+    <div class="header-actions">
+      <button class="btn-action" onclick="toggleGameMode()" id="modeBtn">🎯 ¡Adivina el Sonido!</button>
+      <div class="basket-counter">🧺 <span id="basketCount">0</span></div>
+    </div>
+  </nav>
+
+  <main class="farm-viewport" id="farmViewport">
+    <!-- Sol y Nubes -->
+    <div class="sun">☀️</div>
+    <div class="cloud cloud-1">☁️</div>
+    <div class="cloud cloud-2">☁️</div>
+
+    <!-- Fondo de Montañas -->
+    <div class="mountains"></div>
+
+    <!-- Granero Rojo -->
+    <div class="barn" title="Granero">
+      <div class="barn-roof"></div>
+      <div class="barn-wall">
+        <div class="barn-door"></div>
+        <div class="barn-window">⭐</div>
+      </div>
+    </div>
+
+    <!-- Molino de Viento Animado -->
+    <div class="windmill" title="Molino de Trigo">
+      <div class="windmill-body"></div>
+      <div class="windmill-blades">
+        <div class="blade b1"></div>
+        <div class="blade b2"></div>
+        <div class="blade b3"></div>
+        <div class="blade b4"></div>
+      </div>
+    </div>
+
+    <!-- Cerca de Madera -->
+    <div class="fence-line"></div>
+
+    <!-- Árbol de Manzanas (Fruta de árbol) -->
+    <div class="apple-tree" id="appleTree" onclick="harvestApple(event)" title="¡Toca para cosechar manzanas!">
+      <div class="tree-trunk"></div>
+      <div class="tree-foliage">
+        <span class="apple a1" id="app1">🍎</span>
+        <span class="apple a2" id="app2">🍎</span>
+        <span class="apple a3" id="app3">🍎</span>
+        <span class="apple a4" id="app4">🍎</span>
+      </div>
+    </div>
+
+    <!-- Cultivo de Huerta en la Tierra (Zanahorias y Maíz) -->
+    <div class="crop-field" id="cropField">
+      <div class="crop-row">
+        <div class="crop-plant" onclick="harvestCrop(this, '🥕 Zanahoria')" title="Zanahoria">🥕</div>
+        <div class="crop-plant" onclick="harvestCrop(this, '🌽 Maíz')" title="Maíz">🌽</div>
+        <div class="crop-plant" onclick="harvestCrop(this, '🥕 Zanahoria')" title="Zanahoria">🥕</div>
+        <div class="crop-plant" onclick="harvestCrop(this, '🌽 Maíz')" title="Maíz">🌽</div>
+      </div>
+    </div>
+
+    <!-- Estanque de Patos -->
+    <div class="pond" onclick="playAnimal('pato', event)">
+      <div class="duck">🦆</div>
+    </div>
+
+    <!-- Animales de la Granja en el Prado -->
+    <div class="animal-entity cow" onclick="playAnimal('vaca', event)" title="Vaca">🐮</div>
+    <div class="animal-entity horse" onclick="playAnimal('caballo', event)" title="Caballo">🐴</div>
+    <div class="animal-entity sheep" onclick="playAnimal('oveja', event)" title="Oveja">🐑</div>
+    <div class="animal-entity pig" onclick="playAnimal('cerdo', event)" title="Cerdo">🐷</div>
+    <div class="animal-entity hen" onclick="playAnimal('gallina', event)" title="Gallina">🐔</div>
+    <div class="animal-entity dog" onclick="playAnimal('perro', event)" title="Perro">🐶</div>
+    <div class="animal-entity cat" onclick="playAnimal('gato', event)" title="Gato">🐱</div>
+    <div class="tractor" onclick="playTractor(event)">🚜</div>
+
+    <!-- Mensaje Flotante de Instrucción / Lumi -->
+    <div class="lumi-banner" id="lumiBanner">
+      <span id="lumiText">¡Toca los animales para escucharlos o cosecha frutas en la granja!</span>
+    </div>
+  </main>
+
+  <script src="../kit.js"></script>
+  <script src="../global_helper.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

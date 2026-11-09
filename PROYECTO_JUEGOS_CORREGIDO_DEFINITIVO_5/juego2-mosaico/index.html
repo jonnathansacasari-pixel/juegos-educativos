@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atrapa Burbujas Musical</title>
+  <link rel="stylesheet" href="../global.css">
+  <link rel="stylesheet" href="../kit.css">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="game-header">
+    <a href="../index.html" class="nav-btn-home">
+      <span class="btn-icon">🏠</span>
+      <span class="btn-text">Menú</span>
+    </a>
+    
+    <div class="header-title-box">
+      <span class="header-icon">🫧</span>
+      <h1 class="header-title">Atrapa Burbujas Musical</h1>
+    </div>
+
+    <div class="song-card-header" id="songBadge">
+      🎵 Melodía: Cargando...
+    </div>
+  </header>
+
+  <main class="game-area-container">
+    <div class="score-board-custom">
+      <div class="score-card points">🎈 Puntos: <span id="scoreText">0</span></div>
+      <div class="score-card streak">🔥 Racha: <span id="streakText">0</span></div>
+      <div class="score-card danger">❌ Escapadas: <span id="escapedText">0 / 10</span></div>
+    </div>
+
+    <div id="bubbleContainer" class="bubble-viewport"></div>
+  </main>
+
+  <script src="../kit.js"></script>
+  <script src="../global_helper.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

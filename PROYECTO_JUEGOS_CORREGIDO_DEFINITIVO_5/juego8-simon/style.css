@@ -1,0 +1,19 @@
+* { box-sizing: border-box; font-family: 'Fredoka', sans-serif; }
+body { margin: 0; padding: 15px; text-align: center; overflow: hidden; }
+.top-nav { display: flex; justify-content: space-between; align-items: center; background: #f43f5e; padding: 12px 20px; border-radius: 20px; color: white; margin-bottom: 10px; }
+.btn-home { background: #fff; color: #f43f5e; text-decoration: none; font-weight: bold; padding: 10px 18px; border-radius: 50px; }
+.score { font-weight: 700; background: #fff; color: #be123c; padding: 8px 18px; border-radius: 30px; font-size: 1.4rem; }
+.heladeria { display: flex; justify-content: space-around; align-items: flex-end; height: calc(100vh - 130px); gap: 10px; }
+.panel { display: flex; flex-direction: column; gap: 16px; align-items: center; background: rgba(255,255,255,.85); border: 5px solid #fff; border-radius: 36px; padding: 18px; box-shadow: 0 10px 0 rgba(0,0,0,.1); }
+.fila { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.sab { width: min(10vw,84px); height: min(10vw,84px); min-height: 56px; border-radius: 50%; border: 5px solid #fff; background: radial-gradient(circle at 32% 28%,#fff 0,var(--c) 45%); cursor: pointer; box-shadow: 0 7px 0 rgba(0,0,0,.22); }
+.tp { font-size: 2.6rem; width: 70px; height: 70px; border-radius: 22px; border: 4px solid #fff; background: #fff; cursor: pointer; box-shadow: 0 6px 0 rgba(0,0,0,.18); }
+.servir { font-size: 1.7rem; font-weight: 700; color: #fff; background: #22c55e; border: 5px solid #fff; border-radius: 36px; padding: 14px 26px; cursor: pointer; box-shadow: 0 8px 0 #15803d; }
+.helado { position: relative; width: 200px; height: min(62vh,500px); transition: transform .7s cubic-bezier(.5,0,.9,.6); }
+.helado.vuela { transform: translateX(32vw) rotate(12deg) scale(.7); }
+.cono { position: absolute; bottom: 0; left: 50%; margin-left: -70px; width: 140px; filter: drop-shadow(0 8px 6px rgba(0,0,0,.25)); }
+.bola { position: absolute; left: 50%; margin-left: -70px; width: 140px; height: 112px; border-radius: 50% 50% 46% 46%; background: radial-gradient(circle at 30% 25%,#fff8 0,transparent 25%),var(--c); box-shadow: inset -10px -12px 18px rgba(0,0,0,.18),0 4px 8px rgba(0,0,0,.2); animation: entra .45s cubic-bezier(.3,1.6,.5,1); }
+.top { position: absolute; left: 50%; margin-left: -35px; font-size: 4rem; animation: entra .45s; filter: drop-shadow(0 6px 4px rgba(0,0,0,.2)); }
+@keyframes entra { 0% { transform: translateY(-120px) scale(.4); opacity: 0; } 100% { transform: none; opacity: 1; } }
+.cliente { font-size: min(16vw,9rem); animation: floaty 3s ease-in-out infinite; filter: drop-shadow(0 10px 8px rgba(0,0,0,.25)); }
+.feliz { animation: salto3 .8s infinite; } @keyframes salto3 { 50% { transform: translateY(-34px) scale(1.15); } }

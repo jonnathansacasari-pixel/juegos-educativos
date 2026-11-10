@@ -1,10 +1,39 @@
 (function(){
-  // --- 1. SINTETIZADOR DE VOZ GLOBAL ---
+  // --- 1. SINTETIZADOR DE VOZ GLOBAL (HABILITADO PARA LOS JUEGOS) ---
   var ss = window.speechSynthesis;
   window.mudo = false;
-  window.decir = function(txt){
-    if (window.mudo || !ss) return;
-  };
+  var voice = null;
+  if (ss) {
+    var orig = ss.speak.bind(ss);
+    var pref = /(Dalia|Sabina|Paulina|Helena|Salome|Elena|Camila|Natural|Online|Google)/i;
+    var male = /(Raul|Pablo|Jorge|Alvaro|Álvaro|Diego|Male)/i;
+    var pick = function(){
+      var l = ss.getVoices().filter(function(v){ return /^es/i.test(v.lang) && !male.test(v.name); });
+      voice = l.find(function(v){ return /es[-_](MX|US|419|CO|AR)/i.test(v.lang) && pref.test(v.name); }) ||
+              l.find(function(v){ return pref.test(v.name); }) ||
+              l.find(function(v){ return /es[-_](MX|US|419)/i.test(v.lang); }) ||
+              l[0] || null;
+    };
+    pick();
+    if (ss.onvoiceschanged !== undefined) ss.onvoiceschanged = pick;
+
+    window.decir = function(txt){
+      if (window.mudo || !ss) return;
+      try {
+        if (ss.paused) ss.resume();
+        ss.cancel();
+        var u = new SpeechSynthesisUtterance(txt);
+        u.lang = voice ? voice.lang : 'es-MX';
+        if (voice) u.voice = voice;
+        u.rate = 0.95;
+        u.pitch = 1.1;
+        u.volume = 1;
+        orig(u);
+      } catch(e){}
+    };
+  } else {
+    window.decir = function(){};
+  }
 
   // --- 2. BOTÓN DE AUDIO DISCRETO ---
   var mb = document.createElement('button');
@@ -48,7 +77,7 @@
     }
   });
 
-  // --- 4. BASE DE DATOS CURRICULAR (OFICIAL Y ALINEADA) ---
+  // --- 4. BASE DE DATOS CURRICULAR ---
   var JUEGOS_INFO = {
     'juego1-avatar': {
       id: 1,
@@ -69,7 +98,7 @@
       ambito: "Convivencia",
       icono: "🫧",
       color: "#0369a1",
-      objetivo: "Incrementar la atención sostenida, la autorregulación y la interacción lúdica siguiendo dinámicas musicales y reglas sencillas de participación.",
+      objetivo: "Incrementar la atención sustained, la autorregulación y la interacción lúdica siguiendo dinámicas musicales y reglas sencillas de participación.",
       destrezas: [
         "Integrarse y participar activamente en dinámicas de juego interactivo con reglas sencillas y metas claras.",
         "Desarrollar la concentración visual y auditiva reaccionando al ritmo de melodías y notas musicales.",
@@ -167,7 +196,7 @@
     }
   }
 
-  // --- 5. ESTRUCTURA FORMAL DE LA FICHA PEDAGÓGICA ---
+  // --- 5. FICHA PEDAGÓGICA FORMAL ---
   var modalOverlay = document.createElement('div');
   modalOverlay.className = 'pedagogia-modal-overlay';
   modalOverlay.id = 'pedagogiaModal';
@@ -270,7 +299,7 @@
     document.getElementById('pedagogiaModal').classList.remove('active');
   };
 
-  // --- 6. INTEGRACIÓN UNIFICADA EN LA INTERFAZ ---
+  // --- 6. INTEGRACIÓN UNIFICADA ---
   document.addEventListener('DOMContentLoaded', function() {
     if (currentGameKey) {
       var topNav = document.querySelector('.top-nav, .game-header, nav.top-nav');
@@ -283,12 +312,6 @@
         btnNav.innerHTML = '📜 <span class="btn-ped-text">Ficha Pedagógica</span>';
         btnNav.onclick = function() { abrirPedagogiaModal(currentGameKey); };
         topNav.appendChild(btnNav);
-      } else {
-        var btnFloat = document.createElement('button');
-        btnFloat.className = 'btn-pedagogia-formal-float';
-        btnFloat.innerHTML = '📜 Ficha Pedagógica';
-        btnFloat.onclick = function() { abrirPedagogiaModal(currentGameKey); };
-        document.body.appendChild(btnFloat);
       }
     } else {
       var header = document.querySelector('header, .header');

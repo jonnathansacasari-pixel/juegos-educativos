@@ -1,53 +1,82 @@
 (function(){
-  // --- 1. SINTETIZADOR DE VOZ GLOBAL (HABILITADO PARA LOS JUEGOS) ---
-  var ss = window.speechSynthesis;
-  window.mudo = false;
-  var voice = null;
-  if (ss) {
-    var orig = ss.speak.bind(ss);
-    var pref = /(Dalia|Sabina|Paulina|Helena|Salome|Elena|Camila|Natural|Online|Google)/i;
-    var male = /(Raul|Pablo|Jorge|Alvaro|Álvaro|Diego|Male)/i;
-    var pick = function(){
-      var l = ss.getVoices().filter(function(v){ return /^es/i.test(v.lang) && !male.test(v.name); });
-      voice = l.find(function(v){ return /es[-_](MX|US|419|CO|AR)/i.test(v.lang) && pref.test(v.name); }) ||
-              l.find(function(v){ return pref.test(v.name); }) ||
-              l.find(function(v){ return /es[-_](MX|US|419)/i.test(v.lang); }) ||
-              l[0] || null;
-    };
-    pick();
-    if (ss.onvoiceschanged !== undefined) ss.onvoiceschanged = pick;
-
-    window.decir = function(txt){
-      if (window.mudo || !ss) return;
-      try {
-        if (ss.paused) ss.resume();
-        ss.cancel();
-        var u = new SpeechSynthesisUtterance(txt);
-        u.lang = voice ? voice.lang : 'es-MX';
-        if (voice) u.voice = voice;
-        u.rate = 0.95;
-        u.pitch = 1.1;
-        u.volume = 1;
-        orig(u);
-      } catch(e){}
-    };
-  } else {
-    window.decir = function(){};
+  // --- 1. DESBLOQUEADOR GLOBAL DE AUDIO Y VOZ (REGLA DE AUTOPLAY DE NAVEGADORES) ---
+  var audioDesbloqueado = false;
+  function desbloquearAudio() {
+    if (audioDesbloqueado) return;
+    audioDesbloqueado = true;
+    
+    // Desbloquear sintetizador de voz
+    if (window.speechSynthesis) {
+      window.speechSynthesis.resume();
+    }
+    // Desbloquear Web Audio Context
+    try {
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        var ctx = new AudioCtx();
+        if (ctx.state === 'suspended') ctx.resume();
+      }
+    } catch(e){}
   }
 
-  // --- 2. BOTÓN DE AUDIO DISCRETO ---
+  document.addEventListener('pointerdown', desbloquearAudio, { passive: true });
+  document.addEventListener('click', desbloquearAudio, { passive: true });
+
+  // --- 2. SINTETIZADOR DE VOZ MEJORADO Y ASÍNCRONO ---
+  var ss = window.speechSynthesis;
+  window.mudo = false;
+  var vozEspanol = null;
+
+  function cargarVoces() {
+    if (!ss) return;
+    var lista = ss.getVoices();
+    vozEspanol = lista.find(function(v){ return /es[-_](MX|US|419|EC|CO|ES)/i.test(v.lang); }) ||
+                 lista.find(function(v){ return /^es/i.test(v.lang); }) || null;
+  }
+
+  if (ss) {
+    cargarVoces();
+    if (ss.onvoiceschanged !== undefined) {
+      ss.onvoiceschanged = cargarVoces;
+    }
+  }
+
+  window.decir = function(txt) {
+    if (window.mudo || !ss || !txt) return;
+    try {
+      if (ss.paused) ss.resume();
+      ss.cancel(); // Detener locución previa
+
+      var u = new SpeechSynthesisUtterance(txt);
+      if (!vozEspanol) cargarVoces();
+      
+      u.lang = vozEspanol ? vozEspanol.lang : 'es-MX';
+      if (vozEspanol) u.voice = vozEspanol;
+      u.rate = 0.95;
+      u.pitch = 1.1;
+      u.volume = 1;
+
+      // Retardo de 60ms para dar tiempo al navegador a procesar la orden
+      setTimeout(function(){
+        ss.speak(u);
+      }, 60);
+    } catch(e){}
+  };
+
+  // --- 3. BOTÓN DE AUDIO DISCRETO ---
   var mb = document.createElement('button');
   mb.textContent = '🔊';
   mb.title = 'Activar/Desactivar Voz y Sonidos';
   mb.className = 'btn-audio-float';
-  mb.onclick = function(){
+  mb.onclick = function(e){
+    e.stopPropagation();
     window.mudo = !window.mudo;
     mb.textContent = window.mudo ? '🔇' : '🔊';
     if (ss) ss.cancel();
   };
   document.body.appendChild(mb);
 
-  // --- 3. EFECTO DE PARTÍCULAS INTERACTIVAS ---
+  // --- 4. EFECTO DE PARTÍCULAS INTERACTIVAS ---
   window.createBurst = function(x, y, n){
     n = n || 8;
     var s = ['⭐','✨','🌟'], c = ['#38bdf8','#818cf8','#a78bfa','#34d399'];
@@ -72,12 +101,12 @@
   };
 
   document.addEventListener('pointerdown', function(e){
-    if (e.target.closest && e.target.closest('button,.character,.balloon,.card')){
+    if (e.target.closest && e.target.closest('button,.character,.balloon,.card,.animal-entity')){
       createBurst(e.clientX, e.clientY, 6);
     }
   });
 
-  // --- 4. BASE DE DATOS CURRICULAR ---
+  // --- 5. BASE DE DATOS CURRICULAR ---
   var JUEGOS_INFO = {
     'juego1-avatar': {
       id: 1,
@@ -98,7 +127,7 @@
       ambito: "Convivencia",
       icono: "🫧",
       color: "#0369a1",
-      objetivo: "Incrementar la atención sustained, la autorregulación y la interacción lúdica siguiendo dinámicas musicales y reglas sencillas de participación.",
+      objetivo: "Incrementar la atención sostenida, la autorregulación y la interacción lúdica siguiendo dinámicas musicales y reglas sencillas de participación.",
       destrezas: [
         "Integrarse y participar activamente en dinámicas de juego interactivo con reglas sencillas y metas claras.",
         "Desarrollar la concentración visual y auditiva reaccionando al ritmo de melodías y notas musicales.",
@@ -127,7 +156,7 @@
       objetivo: "Descubrir y explorar el entorno natural reconociendo las características, sonidos y hábitats de los animales de la granja.",
       destrezas: [
         "Identificar características físicas y discriminar los sonidos onomatopéyicos característicos de los animales de la granja.",
-        "Participar en adivinanzas auditivas y dinámicas de exploración identificando elementos propios de la naturaleza.",
+        "Participar en adivinanzas auditivas y dinámicas de exploration identificando elementos propios de la naturaleza.",
         "Desarrollar actitudes de respeto, empatía y cuidado ambiental hacia los animales y seres vivos de su entorno."
       ]
     },
@@ -196,7 +225,7 @@
     }
   }
 
-  // --- 5. FICHA PEDAGÓGICA FORMAL ---
+  // --- 6. FICHA PEDAGÓGICA FORMAL MODAL ---
   var modalOverlay = document.createElement('div');
   modalOverlay.className = 'pedagogia-modal-overlay';
   modalOverlay.id = 'pedagogiaModal';
@@ -299,7 +328,7 @@
     document.getElementById('pedagogiaModal').classList.remove('active');
   };
 
-  // --- 6. INTEGRACIÓN UNIFICADA ---
+  // --- 7. MONTAJE DE BOTONES DE LA FICHA ---
   document.addEventListener('DOMContentLoaded', function() {
     if (currentGameKey) {
       var topNav = document.querySelector('.top-nav, .game-header, nav.top-nav');

@@ -1,0 +1,15 @@
+* { box-sizing: border-box; font-family: 'Fredoka', sans-serif; }
+body { background: #faf5ff; margin: 0; padding: 15px; text-align: center; }
+.top-nav { display: flex; justify-content: space-between; align-items: center; background: #8e7cc3; padding: 12px 20px; border-radius: 20px; color: white; margin-bottom: 20px; }
+.btn-home { background: white; color: #8e7cc3; text-decoration: none; font-weight: bold; padding: 10px 18px; border-radius: 50px; }
+.stars { font-weight: 700; background: #fff; color: #6b21a8; padding: 8px 16px; border-radius: 30px; }
+.libro { max-width: 760px; margin: 0 auto; }
+.escena { display: block!important; position: relative; height: 52vh; overflow: hidden; border: 6px solid #fff; border-radius: 44px; box-shadow: 0 10px 0 rgba(0,0,0,.12); }
+.it { position: absolute; line-height: 1; animation: floaty 3s ease-in-out infinite; filter: drop-shadow(0 8px 6px rgba(0,0,0,.25)); }
+.ac { cursor: pointer; animation: latido 1s ease-in-out infinite; filter: drop-shadow(0 0 14px #fde047); }
+@keyframes latido { 0%,100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+.texto { margin: 16px 0; font-size: clamp(1.2rem,4vw,1.8rem); font-weight: 700; color: #581c87; background: #fff; border-radius: 34px; padding: 18px; box-shadow: 0 8px 0 rgba(0,0,0,.1); }
+.nav-cuento { display: flex; justify-content: center; gap: 18px; }
+.flecha { font-size: 2.2rem; width: 80px; height: 80px; border-radius: 50%; border: 5px solid #fff; background: #a855f7; color: #fff; cursor: pointer; box-shadow: 0 8px 0 #7e22ce; }
+.oir { background: #22c55e; box-shadow: 0 8px 0 #15803d; }
+.listo { animation: latido .8s infinite; background: #22c55e; box-shadow: 0 8px 0 #15803d,0 0 24px #86efac; }

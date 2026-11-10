@@ -1,0 +1,13 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Alimenta al Monstruo</title>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="../kit.css"></head><body>
+<div class="top-nav"><a href="../index.html" class="btn-home">🏠 Menú</a><span class="title">👾 ¡Alimenta al Monstruo!</span><span class="stars" id="stars">⭐ 0</span></div>
+<div class="pedido" id="pedido"></div>
+<div class="monstruo" id="mons"><svg viewBox="0 0 300 300"><ellipse cx="150" cy="170" rx="125" ry="115" fill="var(--m)" stroke="rgba(0,0,0,.2)" stroke-width="6"/><circle cx="105" cy="105" r="30" fill="#fff"/><circle cx="195" cy="105" r="30" fill="#fff"/><circle id="o1" cx="108" cy="108" r="14" fill="#1e293b"/><circle id="o2" cx="192" cy="108" r="14" fill="#1e293b"/><polygon points="85,60 105,15 125,65" fill="var(--m)" stroke="rgba(0,0,0,.2)" stroke-width="5"/><polygon points="175,65 195,15 215,60" fill="var(--m)" stroke="rgba(0,0,0,.2)" stroke-width="5"/><ellipse id="boca" cx="150" cy="195" rx="62" ry="38" fill="#7f1d1d" stroke="#1e293b" stroke-width="6"/><rect x="118" y="160" width="20" height="22" fill="#fff"/><rect x="162" y="160" width="20" height="22" fill="#fff"/></svg><div class="barriga" id="barriga"></div></div>
+<div class="plato" id="plato"></div>
+<script src="../kit.js"></script><script src="script.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => { if (window.decir) window.decir("¡Bienvenido a Cuenta Globos y Alimenta al Monstruo!"); }, 600);
+  });
+</script>
+</body></html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Heladería Mágica</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../kit.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="top-nav">
+    <a href="../index.html" class="btn-home">🏠 Menú</a>
+    <span class="title">🍦 La Heladería Mágica</span>
+    <span class="score" id="cnt">🍦 0</span>
+  </div>
+
+  <main class="heladeria">
+    <div class="panel">
+      <h3>🍨 Tipo de Base:</h3>
+      <div class="fila-base">
+        <button class="btn-base active" id="btn-cono" onclick="setBase('cono')">🧇 Cono Rombos</button>
+        <button class="btn-base" id="btn-copa" onclick="setBase('copa')">🍧 Copa Cristal</button>
+      </div>
+
+      <h3>🎨 Sabores de Nieve:</h3>
+      <div class="fila" id="sab"></div>
+      
+      <h3>✨ Coberturas y Decoraciones:</h3>
+      <div class="fila" id="tops"></div>
+      
+      <button class="servir" onclick="servir()">🎉 ¡Servir Helado!</button>
+    </div>
+
+    <div class="estacion">
+      <div class="helado" id="hel">
+        <!-- SVG Cono Rombos -->
+        <svg class="cono-base base-elem active" id="svg-cono" viewBox="0 0 140 160">
+          <defs>
+            <clipPath id="conoClip">
+              <polygon points="10,0 130,0 70,155" />
+            </clipPath>
+          </defs>
+          <polygon points="10,0 130,0 70,155" fill="#f59e0b" stroke="#b45309" stroke-width="6" stroke-linejoin="round"/>
+          <g clip-path="url(#conoClip)">
+            <path d="M-20 -20 L160 160 M0 -20 L180 160 M20 -20 L200 160 M-40 -20 L140 160 M-60 -20 L120 160" stroke="#d97706" stroke-width="4"/>
+            <path d="M160 -20 L-20 160 M140 -20 L-40 160 M180 -20 L0 160 M120 -20 L-60 160 M200 -20 L20 160" stroke="#b45309" stroke-width="3.5" opacity="0.7"/>
+          </g>
+          <polygon points="10,0 130,0 70,155" fill="none" stroke="#92400e" stroke-width="5" stroke-linejoin="round"/>
+        </svg>
+
+        <!-- SVG Copa Cristal colocado por detrás -->
+        <svg class="copa-base base-elem" id="svg-copa" viewBox="0 0 170 150">
+          <ellipse cx="85" cy="135" rx="45" ry="10" fill="#0284c7" opacity="0.3"/>
+          <path d="M75 90 L75 130 L95 130 L95 90 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="3"/>
+          <ellipse cx="85" cy="130" rx="40" ry="8" fill="#0284c7"/>
+          <!-- Vaso transparente detrás -->
+          <path d="M15 15 L45 90 L125 90 L155 15 Z" fill="rgba(186, 230, 253, 0.55)" stroke="#0284c7" stroke-width="5" stroke-linejoin="round"/>
+          <ellipse cx="85" cy="15" rx="70" ry="12" fill="none" stroke="#0284c7" stroke-width="4"/>
+        </svg>
+      </div>
+
+      <div class="cliente-card">
+        <span class="cliente-label">¡Cliente esperando!</span>
+        <div class="cliente" id="cli">🐻</div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../kit.js"></script>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => { 
+        if (window.decir) window.decir("¡Bienvenido a La Heladería! Prepara un helado delicioso."); 
+      }, 600);
+    });
+  </script>
+</body>
+</html>

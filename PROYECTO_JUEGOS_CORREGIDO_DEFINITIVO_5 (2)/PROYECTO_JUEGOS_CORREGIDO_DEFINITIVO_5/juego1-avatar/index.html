@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego 1 - Mi Carita Feliz Mágica</title>
+  <link rel="stylesheet" href="../global.css">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../kit.css">
+</head>
+<body>
+
+  <header class="top-nav">
+    <a href="../index.html" class="btn-home">🏠 Menú</a>
+    <span class="game-title">😊 ¡Mi Carita Feliz Mágica!</span>
+    <div class="nav-actions">
+      <button class="btn-act btn-dance" onclick="startDance()">💃 ¡A Bailar!</button>
+      <button class="btn-act btn-snap" onclick="takeSnapshot()">📷 Foto</button>
+    </div>
+  </header>
+
+  <main class="game-layout">
+
+    <!-- PANEL DE CONTROLES E INTERACCIÓN -->
+    <aside class="control-panel">
+      <h3>😊 Emociones (8):</h3>
+      <div class="btn-grid">
+        <button class="btn-option btn-happy" onclick="setEmotion('happy')">😄 Feliz</button>
+        <button class="btn-option btn-surprised" onclick="setEmotion('surprised')">😲 Sorpresa</button>
+        <button class="btn-option btn-silly" onclick="setEmotion('silly')">😜 Divertido</button>
+        <button class="btn-option btn-wink" onclick="setEmotion('wink')">😉 Guiño</button>
+        <button class="btn-option btn-love" onclick="setEmotion('love')">😍 Enamorado</button>
+        <button class="btn-option btn-scared" onclick="setEmotion('scared')">😨 Asustado</button>
+        <button class="btn-option btn-cool" onclick="setEmotion('cool')">😎 Genial</button>
+        <button class="btn-option btn-sleepy" onclick="setEmotion('sleepy')">😴 Dormilón</button>
+      </div>
+
+      <h3>🎨 Accesorios Mágicos (6):</h3>
+      <div class="btn-grid">
+        <button class="btn-option btn-acc" onclick="toggleAcc('glasses')">👓 Gafas</button>
+        <button class="btn-option btn-acc" onclick="toggleAcc('crown')">👑 Corona</button>
+        <button class="btn-option btn-acc" onclick="toggleAcc('partyHat')">🎉 Gorro</button>
+        <button class="btn-option btn-acc" onclick="toggleAcc('mustache')">🥸 Bigote</button>
+        <button class="btn-option btn-acc" onclick="toggleAcc('bow')">🎀 Moño</button>
+        <button class="btn-option btn-acc" onclick="toggleAcc('pirate')">🏴‍☠️ Pirata</button>
+        <button class="btn-option btn-clear" style="grid-column: span 2;" onclick="resetAll()">🧹 Limpiar Todo</button>
+      </div>
+
+      <h3>💇 Peinado:</h3>
+      <div class="btn-grid">
+        <button class="btn-option btn-hair" onclick="setHair('curly')">🌀 Rizos</button>
+        <button class="btn-option btn-hair" onclick="setHair('spiky')">⚡ Puntas</button>
+        <button class="btn-option btn-hair" onclick="setHair('pigtails')">🎀 Colitas</button>
+        <button class="btn-option btn-hair" onclick="setHair('long')">👱 Largo</button>
+        <button class="btn-option btn-clear" style="grid-column: span 2;" onclick="setHair('none')">✂️ Sin pelo</button>
+      </div>
+      <div class="color-picker">
+        <button class="dot-color" style="background:#1e293b" onclick="setHairColor('#1e293b')"></button>
+        <button class="dot-color" style="background:#92400e" onclick="setHairColor('#92400e')"></button>
+        <button class="dot-color" style="background:#facc15" onclick="setHairColor('#facc15')"></button>
+        <button class="dot-color" style="background:#ef4444" onclick="setHairColor('#ef4444')"></button>
+        <button class="dot-color" style="background:#a855f7" onclick="setHairColor('#a855f7')"></button>
+      </div>
+
+      <h3>🐾 Orejitas:</h3>
+      <div class="btn-grid">
+        <button class="btn-option btn-ear" onclick="setEars('cat')">🐱 Gatito</button>
+        <button class="btn-option btn-ear" onclick="setEars('bunny')">🐰 Conejito</button>
+        <button class="btn-option btn-ear" onclick="setEars('bear')">🐻 Osito</button>
+        <button class="btn-option btn-clear" onclick="setEars('none')">🚫 Ninguna</button>
+      </div>
+
+      <h3>🎨 Color de Piel:</h3>
+      <div class="color-picker">
+        <button class="dot-color c-yellow" onclick="setSkin('#fde047', '#eab308')"></button>
+        <button class="dot-color c-pink" onclick="setSkin('#fbcfe8', '#f43f5e')"></button>
+        <button class="dot-color c-blue" onclick="setSkin('#bae6fd', '#0284c7')"></button>
+        <button class="dot-color c-green" onclick="setSkin('#bbf7d0', '#16a34a')"></button>
+        <button class="dot-color" style="background:#f5c9a0" onclick="setSkin('#f5c9a0', '#c08457')"></button>
+        <button class="dot-color" style="background:#c68642" onclick="setSkin('#c68642', '#8d5524')"></button>
+        <button class="dot-color" style="background:#8d5524" onclick="setSkin('#8d5524', '#5c3317')"></button>
+      </div>
+    </aside>
+
+    <!-- LIENZO DE DIBUJO ANIMADO -->
+    <section class="stage-view">
+      <div class="canvas-card" id="canvas-card">
+        <canvas id="happyCanvas" width="480" height="480"></canvas>
+      </div>
+      <p class="hint-text">✨ Toca la carita para hacerle cosquillas y verla reír ✨</p>
+    </section>
+
+  </main>
+
+  <!-- MODAL DE FOTO -->
+  <div class="modal-overlay" id="photo-modal" onclick="closeModal()">
+    <div class="modal-card">
+      <img id="photo-result" src="" alt="Foto">
+      <h2>✨ ¡Qué Carita tan Bonita! ✨</h2>
+      <p>Toca en cualquier parte para cerrar</p>
+    </div>
+  </div>
+
+  <script src="../global_helper.js"></script>
+  <script src="script.js"></script>
+  <script src="../kit.js"></script>
+</body>
+</html>

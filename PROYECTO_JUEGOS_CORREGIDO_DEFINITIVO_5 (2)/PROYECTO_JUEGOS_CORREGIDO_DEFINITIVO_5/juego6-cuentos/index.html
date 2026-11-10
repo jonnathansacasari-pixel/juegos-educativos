@@ -1,0 +1,11 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Cuentos del Osito</title>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="../kit.css"></head><body>
+<div class="top-nav"><a href="../index.html" class="btn-home">🏠 Menú</a><span class="title">🐻 Los 10 Cuentos del Osito</span><span class="stars" id="pg">1/10</span></div>
+<main class="libro"><div class="escena" id="escena"></div><div class="texto" id="texto"></div>
+<div class="nav-cuento"><button class="flecha" onclick="ir(-1)">⬅️</button><button class="flecha oir" onclick="leer()">🔊</button><button class="flecha" id="sig" onclick="ir(1)">➡️</button></div></main>
+<script src="../kit.js"></script><script src="script.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => { if (window.decir) window.decir("¡Bienvenido a la Aventura del Osito! Tenemos 10 cuentos maravillosos para ti."); }, 600);
+  });
+</script></body></html>

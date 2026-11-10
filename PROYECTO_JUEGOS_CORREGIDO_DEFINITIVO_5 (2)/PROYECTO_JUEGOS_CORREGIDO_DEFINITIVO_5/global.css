@@ -1,0 +1,78 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Fredoka', 'Quicksand', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+body {
+  background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #fce7f3 100%);
+  min-height: 100vh;
+  padding: 15px;
+  position: relative;
+  overflow-x: hidden;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeSpeed;
+}
+
+/* TOP-NAV CON BISEL 3D VOLUMÉTRICO DE ALTA VELOCIDAD */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 25px;
+  color: white;
+  margin-bottom: 15px;
+  border-bottom: 6px solid rgba(0, 0, 0, 0.15); /* 0% Lag en PCs lentas */
+  transform: translateZ(0); /* Aceleración GPU */
+}
+
+.btn-home {
+  background: white;
+  color: #1e293b;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 10px 22px;
+  border-radius: 50px;
+  border-bottom: 5px solid #cbd5e1;
+  transition: transform 0.08s ease, border-bottom-width 0.08s ease;
+  transform: translateZ(0);
+}
+
+.btn-home:active {
+  transform: translateY(3px) translateZ(0);
+  border-bottom-width: 2px;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* PARTÍCULAS ULTRA FLUIDAS */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+  animation: particle-pop 0.8s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+@keyframes particle-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(0.3) translateZ(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(1.5) rotate(360deg) translateZ(0);
+    opacity: 0;
+  }
+}

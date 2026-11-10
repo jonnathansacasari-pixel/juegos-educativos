@@ -1,0 +1,19 @@
+* { box-sizing: border-box; font-family: 'Fredoka', sans-serif; }
+body { margin: 0; padding: 15px; text-align: center; overflow: hidden; }
+.top-nav { display: flex; justify-content: space-between; align-items: center; background: #3b82f6; padding: 12px 20px; border-radius: 20px; color: white; margin-bottom: 6px; }
+.btn-home { background: #fff; color: #3b82f6; text-decoration: none; font-weight: bold; padding: 10px 18px; border-radius: 50px; }
+.stars { font-weight: 700; background: #fff; color: #b45309; padding: 8px 18px; border-radius: 30px; font-size: 1.4rem; }
+.pedido { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 4px 0; }
+.pn { font-size: clamp(3rem,9vw,5.5rem); font-weight: 700; color: #1d4ed8; text-shadow: 0 5px 0 #fff; line-height: 1; }
+.pd { display: flex; gap: 10px; } .pd i { width: 34px; height: 34px; border-radius: 50%; border: 5px solid #1d4ed8; background: #fff; transition: .3s; }
+.pd i.on { background: #facc15; transform: scale(1.25); box-shadow: 0 0 14px #fde047; }
+.monstruo { position: relative; width: min(40vh,340px); margin: 0 auto; filter: drop-shadow(0 12px 8px rgba(0,0,0,.25)); animation: floaty 3s ease-in-out infinite; }
+.monstruo svg { width: 100%; display: block; }
+.barriga { position: absolute; left: 50%; bottom: 9%; transform: translateX(-50%); font-size: 3rem; font-weight: 700; color: #fff; text-shadow: 0 3px 0 rgba(0,0,0,.3); }
+.come #boca { animation: chomp .5s; } @keyframes chomp { 50% { transform: scaleY(.2); transform-origin: 150px 195px; } }
+.come { animation: come .5s!important; } @keyframes come { 50% { transform: scale(1.1,.92); } }
+.feliz { animation: brinca .6s infinite!important; } @keyframes brinca { 50% { transform: translateY(-36px) scale(1.1); } }
+.no { animation: tmb .4s!important; } @keyframes tmb { 25% { transform: translateX(-14px); } 75% { transform: translateX(14px); } }
+.plato { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 8px auto; max-width: 640px; padding: 12px; background: #fff8; border: 5px solid #fff; border-radius: 50px; }
+.comida { font-size: clamp(3rem,9vw,4.8rem); background: none; border: none; cursor: pointer; animation: floaty 2.4s infinite; filter: drop-shadow(0 6px 4px rgba(0,0,0,.25)); }
+.vuela { position: fixed; font-size: 4.5rem; background: none; border: none; z-index: 50; pointer-events: none; transition: transform .5s ease-in; }

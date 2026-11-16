@@ -1,15 +1,15 @@
 (function(){
-  // --- 1. DESBLOQUEADOR GLOBAL DE AUDIO Y VOZ (REGLA DE AUTOPLAY DE NAVEGADORES) ---
+  // --- CONEXIÓN ACTIVA CON GOOGLE SHEETS ---
+  var URL_GOOGLE_SHEETS = "https://script.google.com/macros/s/AKfycbyXkFDQv08GiJDFSbZBWtAQOAbEBtigaDWYgIHfl6Pdszarcg5_nH4OEgAPvxsH6aFRUQ/exec";
+
+  // --- 1. DESBLOQUEADOR GLOBAL DE AUDIO (REGLA DE AUTOPLAY) ---
   var audioDesbloqueado = false;
   function desbloquearAudio() {
     if (audioDesbloqueado) return;
     audioDesbloqueado = true;
-    
-    // Desbloquear sintetizador de voz
-    if (window.speechSynthesis) {
-      window.speechSynthesis.resume();
+    if (window.speechSynthesis && window.speechSynthesis.paused) {
+      try { window.speechSynthesis.resume(); } catch(e){}
     }
-    // Desbloquear Web Audio Context
     try {
       var AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (AudioCtx) {
@@ -22,46 +22,48 @@
   document.addEventListener('pointerdown', desbloquearAudio, { passive: true });
   document.addEventListener('click', desbloquearAudio, { passive: true });
 
-  // --- 2. SINTETIZADOR DE VOZ MEJORADO Y ASÍNCRONO ---
+  // --- 2. SINTETIZADOR DE VOZ GLOBAL ---
   var ss = window.speechSynthesis;
   window.mudo = false;
-  var vozEspanol = null;
+  var voice = null;
 
   function cargarVoces() {
     if (!ss) return;
-    var lista = ss.getVoices();
-    vozEspanol = lista.find(function(v){ return /es[-_](MX|US|419|EC|CO|ES)/i.test(v.lang); }) ||
-                 lista.find(function(v){ return /^es/i.test(v.lang); }) || null;
+    try {
+      var l = ss.getVoices().filter(function(v){ 
+        var isMale = /(Raul|Pablo|Jorge|Alvaro|Diego|Male)/i.test(v.name);
+        return /^es/i.test(v.lang) && !isMale; 
+      });
+      var pref = /(Dalia|Sabina|Paulina|Helena|Salome|Elena|Camila|Natural|Online|Google)/i;
+      voice = l.find(function(v){ return /es[-_](MX|US|419|CO|EC|AR)/i.test(v.lang) && pref.test(v.name); }) ||
+              l.find(function(v){ return pref.test(v.name); }) ||
+              l.find(function(v){ return /es[-_](MX|US|419)/i.test(v.lang); }) ||
+              l[0] || null;
+    } catch(e){}
   }
 
   if (ss) {
     cargarVoces();
-    if (ss.onvoiceschanged !== undefined) {
-      ss.onvoiceschanged = cargarVoces;
-    }
-  }
+    if (ss.onvoiceschanged !== undefined) ss.onvoiceschanged = cargarVoces;
 
-  window.decir = function(txt) {
-    if (window.mudo || !ss || !txt) return;
-    try {
-      if (ss.paused) ss.resume();
-      ss.cancel(); // Detener locución previa
-
-      var u = new SpeechSynthesisUtterance(txt);
-      if (!vozEspanol) cargarVoces();
-      
-      u.lang = vozEspanol ? vozEspanol.lang : 'es-MX';
-      if (vozEspanol) u.voice = vozEspanol;
-      u.rate = 0.95;
-      u.pitch = 1.1;
-      u.volume = 1;
-
-      // Retardo de 60ms para dar tiempo al navegador a procesar la orden
-      setTimeout(function(){
+    window.decir = function(txt){
+      if (window.mudo || !ss || !txt) return;
+      try {
+        if (ss.paused) ss.resume();
+        ss.cancel();
+        var u = new SpeechSynthesisUtterance(txt);
+        if (!voice) cargarVoces();
+        u.lang = voice ? voice.lang : 'es-MX';
+        if (voice) u.voice = voice;
+        u.rate = 0.95;
+        u.pitch = 1.1;
+        u.volume = 1;
         ss.speak(u);
-      }, 60);
-    } catch(e){}
-  };
+      } catch(e){}
+    };
+  } else {
+    window.decir = function(){};
+  }
 
   // --- 3. BOTÓN DE AUDIO DISCRETO ---
   var mb = document.createElement('button');
@@ -101,12 +103,12 @@
   };
 
   document.addEventListener('pointerdown', function(e){
-    if (e.target.closest && e.target.closest('button,.character,.balloon,.card,.animal-entity')){
+    if (e.target.closest && e.target.closest('button,.character,.balloon,.card,.animal-entity,.sab,.tp')){
       createBurst(e.clientX, e.clientY, 6);
     }
   });
 
-  // --- 5. BASE DE DATOS CURRICULAR ---
+  // --- 5. BASE DE DATOS CURRICULAR (EDUCACIÓN INICIAL) ---
   var JUEGOS_INFO = {
     'juego1-avatar': {
       id: 1,
@@ -156,7 +158,7 @@
       objetivo: "Descubrir y explorar el entorno natural reconociendo las características, sonidos y hábitats de los animales de la granja.",
       destrezas: [
         "Identificar características físicas y discriminar los sonidos onomatopéyicos característicos de los animales de la granja.",
-        "Participar en adivinanzas auditivas y dinámicas de exploration identificando elementos propios de la naturaleza.",
+        "Participar en adivinanzas auditivas y dinámicas de exploración identificando elementos propios de la naturaleza.",
         "Desarrollar actitudes de respeto, empatía y cuidado ambiental hacia los animales y seres vivos de su entorno."
       ]
     },
@@ -328,7 +330,114 @@
     document.getElementById('pedagogiaModal').classList.remove('active');
   };
 
-  // --- 7. MONTAJE DE BOTONES DE LA FICHA ---
+  // --- 7. BOTONES DE VALORACIÓN: ME GUSTA / NO ME GUSTA + GOOGLE SHEETS ---
+  var estiloFeedback = document.createElement('style');
+  estiloFeedback.textContent = '' +
+    '.feedback-float-bar {' +
+      'position: fixed; left: 14px; bottom: 14px; z-index: 99998;' +
+      'display: flex; align-items: center; gap: 8px;' +
+      'background: rgba(255, 255, 255, 0.96); padding: 6px 12px;' +
+      'border-radius: 50px; border: 3px solid #cbd5e1;' +
+      'box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.12);' +
+      'font-family: "Fredoka", sans-serif;' +
+    '}' +
+    '.btn-fb-rate {' +
+      'display: inline-flex; align-items: center; gap: 6px;' +
+      'padding: 7px 14px; border-radius: 30px; border: 2px solid transparent;' +
+      'font-weight: 700; font-size: 0.92rem; cursor: pointer;' +
+      'transition: transform 0.1s, background 0.15s, border-color 0.15s;' +
+    '}' +
+    '.btn-fb-rate:active { transform: scale(0.94); }' +
+    '.btn-fb-like { background: #dcfce7; color: #15803d; }' +
+    '.btn-fb-like:hover { background: #bbf7d0; }' +
+    '.btn-fb-like.activo { background: #22c55e; color: #ffffff; border-color: #15803d; }' +
+    '.btn-fb-dislike { background: #fee2e2; color: #b91c1c; }' +
+    '.btn-fb-dislike:hover { background: #fecaca; }' +
+    '.btn-fb-dislike.activo { background: #ef4444; color: #ffffff; border-color: #991b1b; }' +
+    '.fb-badge-num { background: rgba(0,0,0,0.12); padding: 1px 7px; border-radius: 12px; font-size: 0.85rem; }' +
+    '@media (max-width: 600px) { .fb-label-txt { display: none; } .btn-fb-rate { padding: 7px 11px; } }';
+  document.head.appendChild(estiloFeedback);
+
+  var storageKey = 'suite_voto_' + (currentGameKey || 'inicio');
+  var datosVoto = { likes: 0, dislikes: 0, miVoto: null };
+  try {
+    var guardado = localStorage.getItem(storageKey);
+    if (guardado) datosVoto = JSON.parse(guardado);
+  } catch(e){}
+
+  function guardarEnGoogleSheets(tipoVoto) {
+    if (!URL_GOOGLE_SHEETS || URL_GOOGLE_SHEETS.indexOf("http") === -1) return;
+    var nombreJuego = (currentGameKey && JUEGOS_INFO[currentGameKey]) 
+      ? JUEGOS_INFO[currentGameKey].titulo 
+      : "Menú Principal";
+    fetch(URL_GOOGLE_SHEETS, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        juego: nombreJuego,
+        voto: tipoVoto
+      })
+    }).catch(function(){});
+  }
+
+  var fbBar = document.createElement('div');
+  fbBar.className = 'feedback-float-bar';
+  fbBar.innerHTML = '' +
+    '<button type="button" class="btn-fb-rate btn-fb-like" id="btnMeGusta" title="Me gusta">' +
+      '👍 <span class="fb-label-txt">Me gusta</span> <span class="fb-badge-num" id="cntMeGusta">0</span>' +
+    '</button>' +
+    '<button type="button" class="btn-fb-rate btn-fb-dislike" id="btnNoMeGusta" title="No me gusta">' +
+      '👎 <span class="fb-label-txt">No me gusta</span> <span class="fb-badge-num" id="cntNoMeGusta">0</span>' +
+    '</button>';
+  document.body.appendChild(fbBar);
+
+  function actualizarUIVotos() {
+    var bLike = document.getElementById('btnMeGusta');
+    var bDislike = document.getElementById('btnNoMeGusta');
+    document.getElementById('cntMeGusta').textContent = datosVoto.likes;
+    document.getElementById('cntNoMeGusta').textContent = datosVoto.dislikes;
+    bLike.classList.toggle('activo', datosVoto.miVoto === 'like');
+    bDislike.classList.toggle('activo', datosVoto.miVoto === 'dislike');
+    try { localStorage.setItem(storageKey, JSON.stringify(datosVoto)); } catch(e){}
+  }
+
+  document.getElementById('btnMeGusta').onclick = function(e) {
+    e.stopPropagation();
+    if (datosVoto.miVoto === 'like') {
+      datosVoto.likes = Math.max(0, datosVoto.likes - 1);
+      datosVoto.miVoto = null;
+      actualizarUIVotos();
+    } else {
+      if (datosVoto.miVoto === 'dislike') datosVoto.dislikes = Math.max(0, datosVoto.dislikes - 1);
+      datosVoto.likes += 1;
+      datosVoto.miVoto = 'like';
+      actualizarUIVotos();
+      guardarEnGoogleSheets('Me gusta');
+      if (window.createBurst) window.createBurst(e.clientX, e.clientY, 12);
+      if (window.decir) window.decir('¡Muchas gracias! Qué alegría que te guste.');
+    }
+  };
+
+  document.getElementById('btnNoMeGusta').onclick = function(e) {
+    e.stopPropagation();
+    if (datosVoto.miVoto === 'dislike') {
+      datosVoto.dislikes = Math.max(0, datosVoto.dislikes - 1);
+      datosVoto.miVoto = null;
+      actualizarUIVotos();
+    } else {
+      if (datosVoto.miVoto === 'like') datosVoto.likes = Math.max(0, datosVoto.likes - 1);
+      datosVoto.dislikes += 1;
+      datosVoto.miVoto = 'dislike';
+      actualizarUIVotos();
+      guardarEnGoogleSheets('No me gusta');
+      if (window.decir) window.decir('Gracias por tu opinión, seguiremos mejorando.');
+    }
+  };
+
+  actualizarUIVotos();
+
+  // --- 8. MONTAJE DE BOTONES EN LA INTERFAZ ---
   document.addEventListener('DOMContentLoaded', function() {
     if (currentGameKey) {
       var topNav = document.querySelector('.top-nav, .game-header, nav.top-nav');
